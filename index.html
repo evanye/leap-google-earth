@@ -1,0 +1,83 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <head>
+<!--
+Copyright 2008 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+    <title>Hello Google Earth!</title>
+    <script src="jquery-1.9.1.js"></script>
+    <!-- *** Replace the key below below with your own API key, available at http://code.google.com/apis/maps/signup.html *** -->
+    <script src="http://www.google.com/jsapi?key=AIzaSyC4bvXQ5er3Wk8ekPlPDrujOc5pm5H4n74"></script>
+    <script src="view.js"></script>
+    <script>
+google.load("earth", "1");
+
+var ge = null;
+
+function init() {
+  google.earth.createInstance("map3d", initCallback, failureCallback);
+}
+
+function initCallback(object) {
+  ge = object;
+  ge.getWindow().setVisibility(true);
+
+  var la = ge.createLookAt('');
+  la.set(37.7750, -122.29047924255589, 0, ge.ALTITUDE_RELATIVE_TO_GROUND, 0, 55, 168227.631271163);
+  ge.getView().setAbstractView(la);
+
+  leapMotionInit();
+}
+
+function leapMotionInit(){
+  //Create and open the socket
+  ws = new WebSocket("ws://localhost:6437/");
+  
+  // On successful connection
+  ws.onopen = function(event) {
+    // document.getElementById("main").style.visibility = "visible";
+    // document.getElementById("connection").innerHTML = "WebSocket connection open!";
+  };
+  
+  // On message received
+  ws.onmessage = function(event) {
+    // var obj = JSON.parse(event.data);
+    // var str = JSON.stringify(obj, undefined, 2);
+    // document.getElementById("output").innerHTML = '<pre>' + str + '</pre>';
+  };
+  
+  // On socket close
+  ws.onclose = function(event) {
+    // ws = null;
+    // document.getElementById("main").style.visibility = "hidden";
+    // document.getElementById("connection").innerHTML = "WebSocket connection closed";
+  }
+  
+  //On socket error
+  ws.onerror = function(event) {
+    alert("Received error");
+  };
+}
+
+function failureCallback(object) {
+}
+    </script>
+  </head>
+  <body onload='init()' id='body'>
+      <div id='map3d'></div>
+    </center>
+  </body>
+</html>
