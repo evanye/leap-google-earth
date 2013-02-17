@@ -22,10 +22,20 @@ limitations under the License.
     <!-- *** Replace the key below below with your own API key, available at http://code.google.com/apis/maps/signup.html *** -->
     <script src="http://www.google.com/jsapi?key=AIzaSyC4bvXQ5er3Wk8ekPlPDrujOc5pm5H4n74"></script>
     <script src="view.js"></script>
+    <script src="controller.js"></script>
     <script>
 google.load("earth", "1");
 
 var ge = null;
+
+$('html').keypress(function(evt){
+  if(evt.keyCode == 32){
+    if(animRunning == false)
+      startAnimation();
+    else
+      stopAnimation();
+  }
+});
 
 function init() {
   google.earth.createInstance("map3d", initCallback, failureCallback);
@@ -53,11 +63,7 @@ function leapMotionInit(){
   };
   
   // On message received
-  ws.onmessage = function(event) {
-    // var obj = JSON.parse(event.data);
-    // var str = JSON.stringify(obj, undefined, 2);
-    // document.getElementById("output").innerHTML = '<pre>' + str + '</pre>';
-  };
+  ws.onmessage = recieveData;
   
   // On socket close
   ws.onclose = function(event) {
