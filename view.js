@@ -5,30 +5,35 @@ function startAnimation() {
   if (!animRunning) {
     ge.getOptions().setFlyToSpeed(ge.SPEED_TELEPORT);
     animRunning = true;
-    google.earth.addEventListener(ge, 'frameend', stepFrame);
-    
+    // google.earth.addEventListener(ge, 'frameend', stepFrame);
+    // setTimeout(stepFrame, 100);
     // start it off
-    // tickAnimation();
+    recieving_data = true;
   }
 }
 
 function stopAnimation() {
   if (animRunning) {
-    google.earth.removeEventListener(ge, 'frameend', stepFrame);
+    recieving_data = false;
     animRunning = false;
   }
 }
 
 function stepFrame(){
-  pan(0,10);
-  zoom(1);
-  pitch(1);
-  yaw(1);
+  console.log("stepping!");
+  var movement = getMovement();
+  if(movement){
+    pan(movement.direction, movement.speed);
+    zoom(movement.zoom);
+    pitch(movement.pitch);
+    // yaw(1);
+  }
 }
 
 //speed is a positive value from 0 to 10
 //direction is angle (degrees) where 0 = straign ahead, then clockwise
 function pan(direction, speed) {
+  console.log("panning!");
   // an example of some camera manipulation that's possible w/ the Earth API
   var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
   // debugger;
