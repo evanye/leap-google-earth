@@ -1,0 +1,33 @@
+<html>
+<head>
+	<script text="Javascript">
+
+var NORMAL_Z = 140; var Z_LOWER = 60; var Z_UPPER = 400;
+var NORMAL_ZOOM = 1; var ZOOM_TOLERANCE = 0.05; var ZOOM_LOWER = .9; var ZOOM_HIGHER = 1.1;
+
+function getMovement(data){	
+	var movement = {};
+	//zoom
+	if(data.z < NORMAL_Z){ // zooming in
+		movement.zoom = 1 - (NORMAL_Z - data.z) / (NORMAL_Z - Z_LOWER) * (NORMAL_ZOOM - ZOOM_LOWER);
+	} else { // zooming out
+		movement.zoom = 1 + (Z_UPPER - data.z) / (Z_UPPER - NORMAL_Z) * (ZOOM_HIGHER - NORMAL_ZOOM);
+	}
+
+	console.log(movement.zoom);
+}
+
+var i = Z_LOWER;
+while(i <= Z_UPPER){
+	var data = {z: i};
+	getMovement(data);
+	i += 1;
+}
+
+</script>
+
+</head>
+
+<body></body>
+
+</html>

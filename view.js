@@ -26,7 +26,7 @@ function stepFrame(){
     pan(movement.direction, movement.speed);
     zoom(movement.zoom);
     pitch(movement.pitch);
-    // yaw(1);
+    yaw(movement.yaw);
   }
 }
 

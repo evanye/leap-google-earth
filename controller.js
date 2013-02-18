@@ -4,8 +4,9 @@ var keys = ['x', 'y', 'z', 'pitch', 'yaw'];
 // var normal = {speed: 50, direction: -5000, zoom:200}; // direction is never normalized
 var NORMAL_SPEED = 50; var SPEED_TOLERANCE = 20;
 var NORMAL_Z = 200; var Z_LOWER = 60; var Z_UPPER = 400; Z_RANGE = 50;
-var NORMAL_ZOOM = 1; var ZOOM_TOLERANCE = 0.05; var ZOOM_LOWER = .9; var ZOOM_HIGHER = 1.1;
-var NORMAL_PITCH = 0; var PITCH_TOLERANCE = .05; var PITCH_LOWER = -.60; var PITCH_HIGHER = .70;
+var NORMAL_ZOOM = 1; var ZOOM_TOLERANCE = 0.05; var ZOOM_LOWER = .92; var ZOOM_HIGHER = 1.08;
+var NORMAL_PITCH = 0; var PITCH_TOLERANCE = .2; var PITCH_LOWER = -.60; var PITCH_HIGHER = .70;
+var NORMAL_YAW = 0; var YAW_TOLERANCE = 0.2; var YAW_LOWER = -.75; var YAW_HIGHER = .75;
 
 function recieveData(event){
 	if(recieving_data == true){
@@ -30,7 +31,8 @@ function recieveData(event){
 			//Math.atan2(normal.z, normal.y) * 180/math.pi + 180;
 
 			//yaw - yaw
-			movement.yaw = normal[0]; // roll?
+			movement.yaw = -1 * normal[0]; // roll?
+											// LeapMotion flips its roll angles as well
 			//Math.atan2(normal.x, normal.y) * 180/math.pi + 180;
 
 			leapData.push(movement);
@@ -77,8 +79,11 @@ function getMovement(){
 		movement.pitch = (data.pitch - NORMAL_PITCH) / (PITCH_HIGHER - PITCH_LOWER);
 	}
 
-	console.log(movement.pitch);
-	console.log(movement.yaw);
+	if(Math.abs(data.yaw - NORMAL_YAW) < YAW_TOLERANCE){
+		movement.yaw = 0;
+	} else {
+		movement.yaw = (data.yaw - NORMAL_YAW) / (YAW_HIGHER - YAW_LOWER);
+	}
 
 	return movement;
 }
